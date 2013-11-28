@@ -1,0 +1,7 @@
+name = Commerce Stock Quick Edit( Stock Levels)
+description = adds stock field to commerce back office quick edit form - took code from https://drupal.org/node/1892150 and wrapped a module around it
+dependencies[] = commerce_backoffice
+dependencies[] = commerce_stock
+package = Commerce (stock)
+core = 7.x
+

@@ -1,0 +1,41 @@
+<?php
+
+
+/**
+ * Implements hook_form_FORM_ID_alter().
+ */
+function commerce_stock_quickedit_form_commerce_backoffice_product_quick_edit_form_alter(&$form, &$form_state, &$product){
+  $product = $form_state['product'];
+  $product_wrapper = entity_metadata_wrapper('commerce_product', $product);
+  $form['stock'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Stock'),
+    '#title_display' => 'before',
+    '#default_value' => !empty($product->commerce_stock) ? $product_wrapper->commerce_stock->value() : 0,
+    '#size' => 5,
+  );
+  $form['price']['#title_display'] = 'before';
+  $form['#validate'][] = 'commerce_stock_quickedit_commerce_backoffice_product_quick_edit_form_validate';
+  $form['#submit'][] = 'commerce_stock_quickedit_commerce_backoffice_product_quick_edit_form_submit';
+}
+/**
+ * Validation callback to make sure stock is numeric.
+ */
+function commerce_stock_quickedit_commerce_backoffice_product_quick_edit_form_validate($form, &$form_state) {
+  if (!empty($form_state['values']['stock'])) {
+    if (!is_numeric($form_state['values']['stock'])) {
+      form_set_error('stock', t('Please enter a numeric stock value'));
+    }
+  }
+}
+/**
+ * Submit callback to update the product stock.
+ */
+function commerce_stock_quickedit_commerce_backoffice_product_quick_edit_form_submit($form, $form_state) {
+  $product = $form_state['product'];
+  if (!empty($product) && !empty($form_state['values']['stock'])) {
+    $product_wrapper = entity_metadata_wrapper('commerce_product', $product);
+    $product_wrapper->commerce_stock->set($form_state['values']['stock']);
+    commerce_product_save($product);
+  }
+}
