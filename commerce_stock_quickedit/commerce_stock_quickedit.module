@@ -4,7 +4,7 @@
 /**
  * Implements hook_form_FORM_ID_alter().
  */
-function commerce_stock_quickedit_form_commerce_backoffice_product_quick_edit_form_alter(&$form, &$form_state, &$product){
+function commerce_stock_quickedit_form_commerce_backoffice_product_quick_edit_form_alter(&$form, &$form_state, $form_id){
   $product = $form_state['product'];
   $product_wrapper = entity_metadata_wrapper('commerce_product', $product);
   $form['stock'] = array(
